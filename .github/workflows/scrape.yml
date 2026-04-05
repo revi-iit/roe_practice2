@@ -1,0 +1,35 @@
+name: Scrape Table Sums with Playwright
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # lets you trigger it manually from GitHub UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest   # GitHub gives us a free Linux machine
+
+    steps:
+      # Step 1: Download your repo's code onto the machine
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js (Playwright needs it)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Install Playwright library
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install playwright
+
+      # Step 4: Download the actual browser binaries Playwright needs
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium --with-deps
+
+      # Step 5: ⭐ THIS STEP MUST HAVE YOUR EMAIL ⭐
+      - name: Run scraper - 22f2001532@ds.study.iitm.ac.in
+        run: node scrape.js
